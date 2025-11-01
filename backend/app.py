@@ -26,6 +26,68 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+@app.route('/api/register', methods=['POST'])
+def register():
+    try:
+        data = request.json
+        username = data.get('username')
+        email = data.get('email')
+        password = data.get('password')
+
+        if not username or not email or not password:
+            return jsonify({'error': 'All fields are required'}), 400
+
+        if User.query.filter_by(username=username).first():
+            return jsonify({'error': 'Username already exists'}), 400
+
+        if User.query.filter_by(email=email).first():
+            return jsonify({'error': 'Email already exists'}), 400
+
+        user = User(username=username, email=email)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+
+        login_user(user)
+        return jsonify({'success': True, 'message': 'Registration successful'})
+
+    except Exception as e:
+        return jsonify({'error': f'Registration failed: {str(e)}'}), 500
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    try:
+        data = request.json
+        username = data.get('username')
+        password = data.get('password')
+
+        if not username or not password:
+            return jsonify({'error': 'Username and password are required'}), 400
+
+        user = User.query.filter_by(username=username).first()
+        if user and user.check_password(password):
+            login_user(user)
+            return jsonify({'success': True, 'message': 'Login successful'})
+        else:
+            return jsonify({'error': 'Invalid username or password'}), 401
+
+    except Exception as e:
+        return jsonify({'error': f'Login failed: {str(e)}'}), 500
+
+@app.route('/api/logout')
+@login_required
+def logout():
+    logout_user()
+    return jsonify({'success': True, 'message': 'Logout successful'})
+
+@app.route('/api/user')
+@login_required
+def get_user():
+    return jsonify({
+        'username': current_user.username,
+        'email': current_user.email
+    })
+
 @app.route('/')
 def serve_frontend():
     return send_from_directory('../frontend', 'index.html')
@@ -35,6 +97,7 @@ def serve_static(path):
     return send_from_directory('../frontend', path)
 
 @app.route('/api/upload-pdf', methods=['POST'])
+@login_required
 def upload_pdf():
     try:
         if 'file' not in request.files:
