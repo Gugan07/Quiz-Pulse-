@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quizz Pulse</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Quiz Generator</h1>
+            <p>Upload a PDF and let AI create a customized quiz for you</p>
+        </header>
+        
+        <div class="app-container">
+            <!-- Upload Section -->
+            <div class="card upload-section" id="uploadSection">
+                <h2 class="card-title"><i class="fas fa-file-upload"></i> Upload PDF</h2>
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Drag & Drop your PDF file here</p>
+                    <p>or</p>
+                    <button class="btn" id="browseBtn">
+                        <i class="fas fa-folder-open"></i> Browse Files
+                    </button>
+                    <input type="file" id="fileInput" accept=".pdf" hidden>
+                </div>
+                <div id="fileName" class="hidden"></div>
+            </div>
+            
+            <!-- Quiz Options Section -->
+            <div class="card hidden" id="quizOptionsSection">
+                <h2 class="card-title"><i class="fas fa-cogs"></i> Quiz Options</h2>
+                <div class="quiz-options">
+                    <div class="option-group">
+                        <label for="quizType">Quiz Type</label>
+                        <select id="quizType">
+                            <option value="multiple_choice">Multiple Choice</option>
+                            <option value="true_false">True/False</option>
+                            <option value="short_answer">Short Answer</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label for="questionCount">Number of Questions</label>
+                        <input type="number" id="questionCount" min="1" max="20" value="5">
+                    </div>
+                    <div class="option-group">
+                        <label for="difficulty">Difficulty</label>
+                        <select id="difficulty">
+                            <option value="easy">Easy</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" id="generateQuizBtn">
+                    <i class="fas fa-magic"></i> Generate Quiz
+                </button>
+            </div>
+            
+            <!-- Loading Section -->
+            <div class="card hidden" id="loadingSection">
+                <h2 class="card-title"><i class="fas fa-spinner"></i> Generating Your Quiz</h2>
+                <p>AI is analyzing your PDF and creating questions. This may take a moment...</p>
+                <div class="loader"></div>
+            </div>
+            
+            <!-- Quiz Preview Section -->
+            <div class="card hidden" id="quizPreviewSection">
+                <h2 class="card-title"><i class="fas fa-eye"></i> Quiz Preview</h2>
+                <div class="quiz-preview" id="quizPreview">
+                    <!-- Preview content will be inserted here -->
+                </div>
+                <button class="btn btn-success" id="startQuizBtn">
+                    <i class="fas fa-play"></i> Start Quiz
+                </button>
+                <button class="btn btn-secondary" id="regenerateBtn">
+                    <i class="fas fa-redo"></i> Regenerate
+                </button>
+            </div>
+            
+            <!-- Quiz Taking Section -->
+            <div class="card quiz-taking hidden" id="quizTakingSection">
+                <div class="quiz-header">
+                    <h2 class="card-title"><i class="fas fa-pencil-alt"></i> Quiz</h2>
+                    <div id="quizTimer">Time: 10:00</div>
+                </div>
+                <div class="quiz-progress">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="question-container">
+                    <h3 class="question-text" id="currentQuestionText">Question will appear here</h3>
+                    <div class="options-container" id="optionsContainer">
+                        <!-- Options will be inserted here -->
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button class="btn" id="prevQuestionBtn" disabled>
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn" id="nextQuestionBtn">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <button class="btn btn-success hidden" id="submitQuizBtn">
+                    <i class="fas fa-check-circle"></i> Submit Quiz
+                </button>
+            </div>
+            
+            <!-- Results Section -->
+            <div class="card results-container hidden" id="resultsSection">
+                <h2 class="card-title"><i class="fas fa-chart-bar"></i> Quiz Results</h2>
+                <div class="score-display" id="scoreDisplay">0/0</div>
+                <p class="score-message" id="scoreMessage">Your score will appear here</p>
+                <div class="results-actions">
+                    <button class="btn btn-secondary" id="retakeQuizBtn">
+                        <i class="fas fa-redo"></i> Retake Quiz
+                    </button>
+                    <button class="btn" id="newQuizBtn">
+                        <i class="fas fa-plus"></i> Create New Quiz
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Error Message -->
+            <div class="error-message hidden" id="errorMessage">
+                <i class="fas fa-exclamation-triangle"></i> 
+                <span id="errorText">An error occurred. Please try again.</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/app.js"></script>
+</body>
+</html>
