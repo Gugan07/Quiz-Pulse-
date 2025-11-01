@@ -130,6 +130,7 @@ def upload_pdf():
         return jsonify({'error': f'Error processing PDF: {str(e)}'}), 500
 
 @app.route('/api/generate-quiz', methods=['POST'])
+@login_required
 def generate_quiz():
     try:
         data = request.json
@@ -525,11 +526,14 @@ def analyze_pdf():
         return jsonify({'error': f'Analysis failed: {str(e)}'}), 500
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+
     print("=" * 60)
     print("🚀 PROFESSIONAL QUIZ GENERATOR")
     print("✅ Using ACTUAL PDF Content")
     print("🎯 Real Exam-Quality Questions")
     print("📊 No AI - Pure PDF Text Analysis")
     print("=" * 60)
-    
+
     app.run(debug=True, port=5000)
