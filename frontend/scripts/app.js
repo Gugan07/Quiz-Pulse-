@@ -1,8 +1,7 @@
 // API Base URL
 const API_BASE_URL = 'http://localhost:5000/api';
 
-// Auth state
-let currentUser = null;
+// No authentication required
 
 // DOM Elements
 const uploadSection = document.getElementById('uploadSection');
@@ -33,22 +32,7 @@ const errorMessage = document.getElementById('errorMessage');
 const errorText = document.getElementById('errorText');
 const quizTimer = document.getElementById('quizTimer');
 
-// Auth DOM Elements
-const authSection = document.getElementById('authSection');
-const authButtons = document.getElementById('authButtons');
-const userInfo = document.getElementById('userInfo');
-const userDisplay = document.getElementById('userDisplay');
-const loginBtn = document.getElementById('loginBtn');
-const signupBtn = document.getElementById('signupBtn');
-const logoutBtn = document.getElementById('logoutBtn');
-const authModal = document.getElementById('authModal');
-const closeModal = document.getElementById('closeModal');
-const loginForm = document.getElementById('loginForm');
-const signupForm = document.getElementById('signupForm');
-const loginFormElement = document.getElementById('loginFormElement');
-const signupFormElement = document.getElementById('signupFormElement');
-const switchToSignup = document.getElementById('switchToSignup');
-const switchToLogin = document.getElementById('switchToLogin');
+// Auth state removed - no authentication required
 
 // Quiz state
 let currentQuiz = null;
@@ -86,21 +70,7 @@ fileInput.addEventListener('change', (e) => {
     }
 });
 
-// Auth Event Listeners
-loginBtn.addEventListener('click', () => showAuthModal('login'));
-signupBtn.addEventListener('click', () => showAuthModal('signup'));
-logoutBtn.addEventListener('click', logout);
-closeModal.addEventListener('click', () => authModal.classList.add('hidden'));
-switchToSignup.addEventListener('click', (e) => {
-    e.preventDefault();
-    showAuthModal('signup');
-});
-switchToLogin.addEventListener('click', (e) => {
-    e.preventDefault();
-    showAuthModal('login');
-});
-loginFormElement.addEventListener('submit', handleLogin);
-signupFormElement.addEventListener('submit', handleSignup);
+// Auth event listeners removed - no authentication required
 
 // Quiz Event Listeners
 generateQuizBtn.addEventListener('click', generateQuiz);
@@ -135,8 +105,7 @@ async function handleFileSelection(file) {
         
         const response = await fetch(`${API_BASE_URL}/upload-pdf`, {
             method: 'POST',
-            body: formData,
-            credentials: 'include'  // Include cookies for session
+            body: formData
         });
         
         const data = await response.json();
@@ -178,7 +147,6 @@ async function generateQuiz() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            credentials: 'include',  // Include cookies for session
             body: JSON.stringify({
                 text: extractedText,
                 quiz_type: quizType,
@@ -186,9 +154,9 @@ async function generateQuiz() {
                 difficulty: difficulty
             })
         });
-        
+
         const data = await response.json();
-        
+
         if (!response.ok) {
             throw new Error(data.error || 'Failed to generate quiz');
         }
@@ -410,113 +378,16 @@ function createNewQuiz() {
     extractedText = '';
 }
 
-// Auth Functions
-function showAuthModal(type) {
-    authModal.classList.remove('hidden');
-    if (type === 'login') {
-        loginForm.classList.remove('hidden');
-        signupForm.classList.add('hidden');
-    } else {
-        signupForm.classList.remove('hidden');
-        loginForm.classList.add('hidden');
-    }
-}
-
-async function handleLogin(e) {
-    e.preventDefault();
-    const username = document.getElementById('loginUsername').value;
-    const password = document.getElementById('loginPassword').value;
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, password })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.error || 'Login failed');
-        }
-
-        currentUser = data.user;
-        updateAuthUI();
-        authModal.classList.add('hidden');
-        showError(''); // Clear any previous errors
-        console.log('User logged in:', currentUser);
-
-    } catch (error) {
-        showError(error.message);
-    }
-}
-
-async function handleSignup(e) {
-    e.preventDefault();
-    const username = document.getElementById('signupUsername').value;
-    const email = document.getElementById('signupEmail').value;
-    const password = document.getElementById('signupPassword').value;
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/register`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ username, email, password })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.error || 'Signup failed');
-        }
-
-        currentUser = data.user;
-        updateAuthUI();
-        authModal.classList.add('hidden');
-        showError(''); // Clear any previous errors
-
-    } catch (error) {
-        showError(error.message);
-    }
-}
-
-function logout() {
-    currentUser = null;
-    updateAuthUI();
-    // Reset to initial state
-    uploadSection.classList.remove('hidden');
-    quizOptionsSection.classList.add('hidden');
-    loadingSection.classList.add('hidden');
-    quizPreviewSection.classList.add('hidden');
-    quizTakingSection.classList.add('hidden');
-    resultsSection.classList.add('hidden');
-    fileName.classList.add('hidden');
-    currentQuiz = null;
-    extractedText = '';
-}
-
-function updateAuthUI() {
-    if (currentUser) {
-        authButtons.classList.add('hidden');
-        userInfo.classList.remove('hidden');
-        userDisplay.textContent = `Welcome, ${currentUser.username}!`;
-    } else {
-        authButtons.classList.remove('hidden');
-        userInfo.classList.add('hidden');
-    }
-}
+// Auth functions removed - no authentication required
 
 function showError(message) {
     errorText.textContent = message;
     errorMessage.classList.remove('hidden');
 }
 
+// Modal error function removed - no modal
+
 // Initialize app
 document.addEventListener('DOMContentLoaded', function() {
     console.log('AI Quiz Generator initialized');
-    updateAuthUI();
 });

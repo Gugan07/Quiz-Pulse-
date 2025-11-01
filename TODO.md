@@ -16,7 +16,7 @@
 ## Testing and Deployment
 - [x] Install new dependencies
 - [x] Create database tables
-- [ ] Test login/signup functionality
-- [ ] Test quiz generation without errors
-- [ ] Test protected routes
-- [ ] Run the full application and verify everything works
+- [x] Test login/signup functionality
+- [x] Test quiz generation without errors
+- [x] Test protected routes
+- [x] Run the full application and verify everything works

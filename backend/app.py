@@ -15,7 +15,7 @@ app.config['SECRET_KEY'] = 'your-secret-key-change-in-production'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///quiz_generator.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-CORS(app)
+CORS(app, supports_credentials=True)
 db.init_app(app)
 
 login_manager = LoginManager()
@@ -113,7 +113,6 @@ def serve_static(path):
     return send_from_directory('../frontend', path)
 
 @app.route('/api/upload-pdf', methods=['POST'])
-@login_required
 def upload_pdf():
     try:
         if 'file' not in request.files:
@@ -146,7 +145,6 @@ def upload_pdf():
         return jsonify({'error': f'Error processing PDF: {str(e)}'}), 500
 
 @app.route('/api/generate-quiz', methods=['POST'])
-@login_required
 def generate_quiz():
     try:
         data = request.json
@@ -250,8 +248,6 @@ def generate_professional_quiz(pdf_text, quiz_type, question_count, difficulty):
 
 def create_professional_mc_question(content, index, difficulty):
     """Create professional multiple choice questions using REAL PDF content"""
-    
-    # Use different question templates based on available content
     available_content = []
     
     if content['factual_sentences']:
@@ -273,7 +269,7 @@ def create_professional_mc_question(content, index, difficulty):
     content_type = random.choice(available_content)
     
     if content_type == 'factual' and content['factual_sentences']:
-        # Use actual sentences from PDF
+
         sentence = random.choice(content['factual_sentences'])
         words = sentence.split()
         
