@@ -9,14 +9,23 @@ import tempfile
 import re
 import random
 from collections import Counter
+from dotenv import load_dotenv
+import google.generativeai as genai
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key-change-in-production'
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-secret-key-change-in-production')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///quiz_generator.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 CORS(app, supports_credentials=True)
 db.init_app(app)
+
+# Configure Google Gemini AI
+genai.configure(api_key=os.getenv('GOOGLE_GEMINI_API_KEY'))
+ai_model = genai.GenerativeModel('gemini-2.5-flash')
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -226,13 +235,84 @@ def extract_quiz_content(pdf_text):
     }
 
 def generate_professional_quiz(pdf_text, quiz_type, question_count, difficulty):
-    """Generate professional, real-looking quiz questions from PDF content"""
-    
-    print("🔍 Extracting professional quiz content from PDF...")
+    """Generate professional, AI-powered quiz questions from PDF content"""
+
+    print("🤖 Using Google Gemini AI to generate high-quality quiz questions...")
+
+    try:
+        # Create AI prompt for quiz generation
+        if quiz_type == 'multiple_choice':
+            options_format = '"options": ["Option A", "Option B", "Option C", "Option D"]'
+            correct_format = '"correctAnswer": 0  // index of correct option (0-3)'
+        elif quiz_type == 'true_false':
+            options_format = '"options": ["True", "False"]'
+            correct_format = '"correctAnswer": 0  // 0 for True, 1 for False'
+        else:  # short_answer
+            options_format = ' // no options field for short_answer'
+            correct_format = '"correctAnswer": "Expected answer text"'
+
+        prompt = f"""
+        You are an expert educator creating high-quality quiz questions from a PDF document.
+
+        DOCUMENT CONTENT:
+        {pdf_text[:8000]}  # Limit content length for API
+
+        TASK: Create {question_count} {quiz_type} questions that test understanding of the key concepts, facts, and information in this document.
+
+        REQUIREMENTS:
+        - Questions must be based DIRECTLY on information in the document
+        - Questions should test comprehension, not just memorization
+        - Difficulty level: {difficulty}
+        - Questions should be professional and academic in tone
+
+        FORMAT: Return a JSON array of question objects with this structure:
+        [
+            {{
+                "id": 1,
+                "question": "Question text here",
+                "type": "{quiz_type}",
+                {options_format},
+                {correct_format}
+            }}
+        ]
+
+        IMPORTANT: Ensure questions are accurate and directly supported by the document content.
+        """
+
+        response = ai_model.generate_content(prompt)
+        ai_response = response.text.strip()
+
+        # Clean up the response to extract JSON
+        if ai_response.startswith('```json'):
+            ai_response = ai_response[7:]
+        if ai_response.endswith('```'):
+            ai_response = ai_response[:-3]
+
+        ai_response = ai_response.strip()
+
+        try:
+            questions = json.loads(ai_response)
+            print(f"✅ AI generated {len(questions)} high-quality quiz questions")
+            return {'questions': questions}
+        except json.JSONDecodeError as e:
+            print(f"❌ AI response parsing failed: {e}")
+            print(f"AI Response: {ai_response[:500]}...")
+            # Fallback to rule-based generation
+            return generate_fallback_quiz(pdf_text, quiz_type, question_count, difficulty)
+
+    except Exception as e:
+        print(f"❌ AI generation failed: {e}")
+        # Fallback to rule-based generation
+        return generate_fallback_quiz(pdf_text, quiz_type, question_count, difficulty)
+
+def generate_fallback_quiz(pdf_text, quiz_type, question_count, difficulty):
+    """Fallback rule-based quiz generation when AI fails"""
+
+    print("🔄 Falling back to rule-based quiz generation...")
     content = extract_quiz_content(pdf_text)
-    
+
     questions = []
-    
+
     for i in range(question_count):
         if quiz_type == 'multiple_choice':
             question = create_professional_mc_question(content, i, difficulty)
@@ -240,10 +320,10 @@ def generate_professional_quiz(pdf_text, quiz_type, question_count, difficulty):
             question = create_professional_tf_question(content, i, difficulty)
         else:  # short_answer
             question = create_professional_sa_question(content, i, difficulty)
-        
+
         questions.append(question)
-    
-    print(f"✅ Created {len(questions)} professional quiz questions")
+
+    print(f"✅ Created {len(questions)} fallback quiz questions")
     return {'questions': questions}
 
 def create_professional_mc_question(content, index, difficulty):
@@ -543,9 +623,9 @@ if __name__ == '__main__':
 
     print("=" * 60)
     print("🚀 PROFESSIONAL QUIZ GENERATOR")
-    print("✅ Using ACTUAL PDF Content")
+    print("🤖 Powered by Google Gemini AI")
     print("🎯 Real Exam-Quality Questions")
-    print("📊 No AI - Pure PDF Text Analysis")
+    print("📊 AI-Enhanced PDF Analysis")
     print("=" * 60)
 
     app.run(debug=True, port=5000)

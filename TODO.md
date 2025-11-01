@@ -20,3 +20,10 @@
 - [x] Test quiz generation without errors
 - [x] Test protected routes
 - [x] Run the full application and verify everything works
+
+## AI Integration
+- [x] Integrate Google Gemini AI for quiz generation
+- [x] Replace rule-based generation with AI-powered questions
+- [x] Add fallback to rule-based generation when AI fails
+- [x] Test AI-generated quiz quality and accuracy
+- [x] Verify quiz generation works for all question types (multiple_choice, true_false, short_answer)
