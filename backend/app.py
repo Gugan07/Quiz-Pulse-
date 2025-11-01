@@ -49,7 +49,15 @@ def register():
         db.session.commit()
 
         login_user(user)
-        return jsonify({'success': True, 'message': 'Registration successful'})
+        return jsonify({
+            'success': True,
+            'message': 'Registration successful',
+            'user': {
+                'id': user.id,
+                'username': user.username,
+                'email': user.email
+            }
+        })
 
     except Exception as e:
         return jsonify({'error': f'Registration failed: {str(e)}'}), 500
@@ -67,7 +75,15 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and user.check_password(password):
             login_user(user)
-            return jsonify({'success': True, 'message': 'Login successful'})
+            return jsonify({
+                'success': True,
+                'message': 'Login successful',
+                'user': {
+                    'id': user.id,
+                    'username': user.username,
+                    'email': user.email
+                }
+            })
         else:
             return jsonify({'error': 'Invalid username or password'}), 401
 

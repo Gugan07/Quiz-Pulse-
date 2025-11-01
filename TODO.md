@@ -9,13 +9,13 @@
 - [x] Improve quiz generation logic to reduce errors and make questions more accurate
 
 ## Frontend Enhancements
-- [ ] Update index.html to add login and signup sections
-- [ ] Update app.js to handle authentication (login, signup, logout)
-- [ ] Update API calls to include auth tokens if needed
+- [x] Update index.html to add login and signup sections
+- [x] Update app.js to handle authentication (login, signup, logout)
+- [x] Update API calls to include auth tokens if needed
 
 ## Testing and Deployment
-- [ ] Install new dependencies
-- [ ] Create database tables
+- [x] Install new dependencies
+- [x] Create database tables
 - [ ] Test login/signup functionality
 - [ ] Test quiz generation without errors
 - [ ] Test protected routes

@@ -13,8 +13,64 @@
         <header>
             <h1>AI Quiz Generator</h1>
             <p>Upload a PDF and let AI create a customized quiz for you</p>
+            <div class="auth-section" id="authSection">
+                <div class="auth-buttons" id="authButtons">
+                    <button class="btn btn-outline" id="loginBtn">Login</button>
+                    <button class="btn btn-outline" id="signupBtn">Sign Up</button>
+                </div>
+                <div class="user-info hidden" id="userInfo">
+                    <span id="userDisplay">Welcome, User!</span>
+                    <button class="btn btn-outline" id="logoutBtn">Logout</button>
+                </div>
+            </div>
         </header>
-        
+
+        <!-- Auth Modal -->
+        <div class="modal hidden" id="authModal">
+            <div class="modal-content">
+                <span class="close" id="closeModal">&times;</span>
+                <div id="authFormContainer">
+                    <!-- Login Form -->
+                    <div id="loginForm">
+                        <h2>Login</h2>
+                        <form id="loginFormElement">
+                            <div class="form-group">
+                                <label for="loginUsername">Username</label>
+                                <input type="text" id="loginUsername" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="loginPassword">Password</label>
+                                <input type="password" id="loginPassword" required>
+                            </div>
+                            <button type="submit" class="btn">Login</button>
+                        </form>
+                        <p>Don't have an account? <a href="#" id="switchToSignup">Sign up</a></p>
+                    </div>
+
+                    <!-- Signup Form -->
+                    <div id="signupForm" class="hidden">
+                        <h2>Sign Up</h2>
+                        <form id="signupFormElement">
+                            <div class="form-group">
+                                <label for="signupUsername">Username</label>
+                                <input type="text" id="signupUsername" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="signupEmail">Email</label>
+                                <input type="email" id="signupEmail" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="signupPassword">Password</label>
+                                <input type="password" id="signupPassword" required>
+                            </div>
+                            <button type="submit" class="btn">Sign Up</button>
+                        </form>
+                        <p>Already have an account? <a href="#" id="switchToLogin">Login</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="app-container">
             <!-- Upload Section -->
             <div class="card upload-section" id="uploadSection">
