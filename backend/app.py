@@ -1,5 +1,7 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, redirect, url_for, flash, session
 from flask_cors import CORS
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from models import db, User
 import PyPDF2
 import os
 import json
@@ -9,7 +11,20 @@ import random
 from collections import Counter
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'your-secret-key-change-in-production'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///quiz_generator.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 CORS(app)
+db.init_app(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 @app.route('/')
 def serve_frontend():
