@@ -484,7 +484,6 @@ def create_professional_tf_question(content, index, difficulty):
         words = sentence.split()
         
         if len(words) > 6:
-            # Convert to statement (remove question marks if any)
             statement = sentence.replace('?', '.')
             if not statement.endswith('.'):
                 statement += '.'
@@ -555,7 +554,6 @@ def generate_plausible_distractor(content, correct_answer):
         if other_terms:
             return random.choice(other_terms)
     
-    # Generic distractors
     distractors = [
         'Incorrect interpretation',
         'Not mentioned in document',

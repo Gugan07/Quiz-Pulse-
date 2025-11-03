@@ -1,9 +1,6 @@
 // API Base URL
 const API_BASE_URL = 'http://localhost:5000/api';
 
-// No authentication required
-
-// DOM Elements
 const uploadSection = document.getElementById('uploadSection');
 const uploadArea = document.getElementById('uploadArea');
 const fileInput = document.getElementById('fileInput');
