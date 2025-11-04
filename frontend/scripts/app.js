@@ -64,10 +64,6 @@ fileInput.addEventListener('change', (e) => {
         handleFileSelection(e.target.files[0]);
     }
 });
-
-
-
-// Quiz Event Listeners
 generateQuizBtn.addEventListener('click', generateQuiz);
 startQuizBtn.addEventListener('click', startQuiz);
 regenerateBtn.addEventListener('click', generateQuiz);
@@ -77,7 +73,7 @@ submitQuizBtn.addEventListener('click', submitQuiz);
 retakeQuizBtn.addEventListener('click', retakeQuiz);
 newQuizBtn.addEventListener('click', createNewQuiz);
 
-// Functions
+
 async function handleFileSelection(file) {
     if (file.type !== 'application/pdf') {
         showError('Please select a PDF file.');
@@ -89,12 +85,12 @@ async function handleFileSelection(file) {
     quizOptionsSection.classList.remove('hidden');
     errorMessage.classList.add('hidden');
     
-    // Show loading while uploading
+
     loadingSection.classList.remove('hidden');
     uploadSection.classList.add('hidden');
     
     try {
-        // Upload PDF to backend
+
         const formData = new FormData();
         formData.append('file', file);
         
@@ -131,7 +127,6 @@ async function generateQuiz() {
     const questionCount = parseInt(document.getElementById('questionCount').value);
     const difficulty = document.getElementById('difficulty').value;
     
-    // Show loading section
     quizOptionsSection.classList.add('hidden');
     loadingSection.classList.remove('hidden');
     errorMessage.classList.add('hidden');
@@ -160,8 +155,7 @@ async function generateQuiz() {
             ...currentQuiz,
             ...data.quiz
         };
-        
-        // Show quiz preview
+
         loadingSection.classList.add('hidden');
         displayQuizPreview();
         quizPreviewSection.classList.remove('hidden');
@@ -213,14 +207,11 @@ function startQuiz() {
     quizPreviewSection.classList.add('hidden');
     quizTakingSection.classList.remove('hidden');
     
-    // Initialize quiz state
     currentQuestionIndex = 0;
     userAnswers = new Array(currentQuiz.questions.length).fill(null);
     
-    // Start timer
     startTimer();
-    
-    // Display first question
+
     displayQuestion(currentQuestionIndex);
     updateNavigationButtons();
 }
@@ -253,15 +244,13 @@ function displayQuestion(index) {
         });
         optionsContainer.appendChild(inputElement);
     }
-    
-    // Update progress bar
+  
     progressBar.style.width = `${((index + 1) / currentQuiz.questions.length) * 100}%`;
 }
 
 function selectOption(optionIndex) {
     userAnswers[currentQuestionIndex] = optionIndex;
-    
-    // Update UI to show selected option
+   
     const options = optionsContainer.querySelectorAll('.option');
     options.forEach((option, index) => {
         if (index === optionIndex) {
