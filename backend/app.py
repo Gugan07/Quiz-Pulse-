@@ -492,7 +492,7 @@ def create_professional_tf_question(content, index, difficulty):
 
                 words = statement.split()
                 if len(words) > 4:
-                    # Change a key word to make it false
+           
                     change_index = random.randint(2, len(words) - 2)
                     original_word = words[change_index]
                     words[change_index] = get_opposite_word(original_word)

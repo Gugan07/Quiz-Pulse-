@@ -29,7 +29,7 @@ const errorMessage = document.getElementById('errorMessage');
 const errorText = document.getElementById('errorText');
 const quizTimer = document.getElementById('quizTimer');
 
-// Auth state removed - no authentication required
+
 
 // Quiz state
 let currentQuiz = null;
