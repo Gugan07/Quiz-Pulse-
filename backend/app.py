@@ -479,7 +479,6 @@ def create_professional_tf_question(content, index, difficulty):
     """Create professional True/False questions using REAL content"""
     
     if content['factual_sentences']:
-        # Use actual sentences and make them into statements
         sentence = random.choice(content['factual_sentences'])
         words = sentence.split()
         
@@ -487,12 +486,10 @@ def create_professional_tf_question(content, index, difficulty):
             statement = sentence.replace('?', '.')
             if not statement.endswith('.'):
                 statement += '.'
-            
-            # 80% chance of true, 20% chance of false (more educational)
             is_true = random.random() < 0.8
             
             if not is_true:
-                # Modify statement to be false
+
                 words = statement.split()
                 if len(words) > 4:
                     # Change a key word to make it false
