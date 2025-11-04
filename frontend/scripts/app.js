@@ -30,16 +30,14 @@ const errorText = document.getElementById('errorText');
 const quizTimer = document.getElementById('quizTimer');
 
 
-
-// Quiz state
 let currentQuiz = null;
 let currentQuestionIndex = 0;
 let userAnswers = [];
 let timerInterval = null;
-let timeLeft = 600; // 10 minutes in seconds
+let timeLeft = 600; 
 let extractedText = '';
 
-// Event Listeners
+
 browseBtn.addEventListener('click', () => fileInput.click());
 uploadArea.addEventListener('click', () => fileInput.click());
 uploadArea.addEventListener('dragover', (e) => {
@@ -67,7 +65,7 @@ fileInput.addEventListener('change', (e) => {
     }
 });
 
-// Auth event listeners removed - no authentication required
+
 
 // Quiz Event Listeners
 generateQuizBtn.addEventListener('click', generateQuiz);
